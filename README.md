@@ -1,4 +1,4 @@
-This is a version of test_rv from the RV project, originally written by @simoll.
+This is a version of test_rv from the [RV project](https://github.com/cdl-saarland/rv), originally written by [Simon Moll](https://github.com/simoll).
 It was altered to be used with artic instead.
 
 -- Launching the test suite --
