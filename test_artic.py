@@ -240,7 +240,7 @@ class HostClangToolchain(Toolchain):
 
 # clang + artic toolchain for the host target
 class HostArticClangToolchain(Toolchain):
-    runtime_dir = os.getenv("ANYDSL_RUNTIME", "../../../runtime")
+    runtime_dir = os.getenv("ANYDSL_RUNTIME", "../runtime")
 
     artic_includes = [runtime_dir + "/src/runtime.impala",
             runtime_dir + "/platforms/intrinsics.impala",
@@ -262,9 +262,9 @@ class HostArticClangToolchain(Toolchain):
       #ret = rvToolOuterLoop(scalarLL, vectorizedLL, scalarName, testCase.options, logPrefix)
       #if 0 != ret: raise TestFailure(rvToolReason, logPrefix)
 
-      optScalarLL = scalarLL[:-2] + "opt.ll"
-      ret = self.clang.optimizeIR(optScalarLL, scalarLL, "")
-      if 0 != ret: raise TestFailure("optimizeIR failed", None)
+      #optScalarLL = scalarLL[:-2] + "opt.ll"
+      #ret = self.clang.optimizeIR(optScalarLL, scalarLL, "")
+      #if 0 != ret: raise TestFailure("optimizeIR failed", None)
 
       launcherCpp, launcherCXXFlags = testCase.requestLauncher(prefix, profileMode)
 

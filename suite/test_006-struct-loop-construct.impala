@@ -1,0 +1,30 @@
+// LaunchCode: fooABCn
+
+struct Vec {
+  x: i32,
+  y: i32,
+  z: i32
+}
+
+#[export]
+fn foo(A : &mut [i32], B : &[i32], C : &[i32], n : i32) -> i32 {
+  let buffer = alloc_cpu(n as i64 * sizeof[Vec]());
+  let V = bitcast[&mut[Vec]](buffer.data);
+
+  for i in loop(n) {
+    V(i) = Vec{x = A(i), y = B(i), z = C(i)};
+  }
+
+  for i in range(0, n) {
+    let p = V(i);
+    let x = p.x;
+    let y = p.y;
+    let z = p.z;
+
+    let r = x * x + y * y + z * z;
+
+    A(i) = r;
+  }
+
+  0
+}
