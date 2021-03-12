@@ -242,11 +242,11 @@ class HostClangToolchain(Toolchain):
 class HostArticClangToolchain(Toolchain):
     runtime_dir = os.getenv("ANYDSL_RUNTIME", "../runtime")
 
-    artic_includes = [runtime_dir + "/src/runtime.impala",
-            runtime_dir + "/platforms/intrinsics.impala",
-            runtime_dir + "/platforms/intrinsics_rv.impala",
-            runtime_dir + "/platforms/intrinsics_cpu.impala",
-            runtime_dir + "/platforms/intrinsics_thorin.impala"]
+    artic_includes = [runtime_dir + "/platforms/artic/runtime.impala",
+            runtime_dir + "/platforms/artic/intrinsics.impala",
+            runtime_dir + "/platforms/artic/intrinsics_rv.impala",
+            runtime_dir + "/platforms/artic/intrinsics_cpu.impala",
+            runtime_dir + "/platforms/artic/intrinsics_thorin.impala"]
 
     def __init__(self):
       self.clang = LLVMTools("-L " + HostArticClangToolchain.runtime_dir + "/build/lib  -lruntime -mavx -march=native -Iinclude -Wno-unused-command-line-argument")

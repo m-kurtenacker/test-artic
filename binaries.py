@@ -36,7 +36,7 @@ def shellCmd(cmdText, envModifier=None, logPrefix=None):
           proc = subprocess.Popen(cmd, stdout=fOut, stderr=fErr, env=processEnv)
     retCode=proc.wait()
     if retCode != 0:
-        print("")
+        print("Ret Code " + str(retCode))
         print(cmdText)
     return retCode
 
