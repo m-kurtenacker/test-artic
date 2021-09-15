@@ -289,8 +289,8 @@ class HostArticClangToolchain(Toolchain):
       scalarLL = testCase.getFilename('scalarLL')[:-3]
       vectorLL = testCase.getFilename('loopLL')[:-3]
       logPrefix = testCase.getFilename('loopLogPrefix') + ".artic"
-      shellCmd("artic " + testCase.srcFile + " launcher/cpu_scalar.impala " + " ".join(HostArticClangToolchain.artic_includes) + " --log-level info --emit-llvm -o " + scalarLL, logPrefix=logPrefix + ".scalar");
-      shellCmd("artic " + testCase.srcFile + " launcher/cpu_vector.impala " + " ".join(HostArticClangToolchain.artic_includes) + " --log-level info --emit-llvm -o " + vectorLL, logPrefix=logPrefix + ".vector");
+      shellCmd("artic " + testCase.srcFile + " launcher/cpu_scalar.art " + " ".join(HostArticClangToolchain.artic_includes) + " --log-level info --emit-llvm -o " + scalarLL, logPrefix=logPrefix + ".scalar");
+      shellCmd("artic " + testCase.srcFile + " launcher/cpu_vector.art " + " ".join(HostArticClangToolchain.artic_includes) + " --log-level info --emit-llvm -o " + vectorLL, logPrefix=logPrefix + ".vector");
       return self.buildOuterLoopTester(testCase, profileMode)
 
 
@@ -374,7 +374,7 @@ while startArg < len(sys.argv):
 patterns = sys.argv[startArg:]
 
 if patterns is None or len(patterns) == 0:
-  patterns = ["suite/*.impala"]
+  patterns = ["suite/*.art"]
 
 
 
