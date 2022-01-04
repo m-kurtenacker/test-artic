@@ -1,0 +1,11 @@
+// LaunchCode: fooABCn
+#[export]
+fn foo (A : &mut [i32], B : &mut [i32], C : &mut [i32], n : i32) -> i32 {
+    for i in loop(n) {
+        for j in range(0, 1 + (i % 3)) {
+            A(B(i) % n) = C(i) + 2;
+        }
+    }
+
+    A(0)
+}

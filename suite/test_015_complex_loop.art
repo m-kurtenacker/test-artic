@@ -1,0 +1,26 @@
+// LaunchCode: fooABCn
+#[export]
+fn foo (A : &mut [i32], B : &mut [i32], C : &mut [i32], n : i32) -> i32 {
+    for i in loop(n) {
+        while true {
+            let exit = break;
+            while true {
+                if C(i) > 35 { exit() }
+                C(i) = C(i) + B(i);
+                if C(i) > 42 { break() }
+            }
+            while true {
+                for lane in range (0, C(i)) {
+                    if B(i) > 35 { break() }
+                    B(i) = B(i) + A(i);
+                    if B(i) > 42 { exit() }
+                }
+                if B(i) > 43 {
+                    break()
+                }
+            }
+        }
+    }
+
+    C(0)
+}
