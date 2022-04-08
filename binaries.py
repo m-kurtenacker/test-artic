@@ -45,8 +45,10 @@ def runForOutput(cmdText):
       print("CMD {}".format(cmdText))
     cmd = shlex.split(cmdText)
     try:
-        return True, subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+        return True, subprocess.check_output(cmd, stderr=subprocess.STDOUT, timeout=600)
     except subprocess.CalledProcessError as err:
+        return False, err.output
+    except subprocess.TimeoutExpired as err:
         return False, err.output
 
 rvToolLine="rvTool"

@@ -1,0 +1,11 @@
+// LaunchCode: fooABCn
+#[export]
+fn foo (A : &mut [i32], B : &mut [i32], C : &mut [i32], n : i32) -> i32 {
+    for i in loop(n) {
+        let b = B(i);
+        C(i) = atomic(1, &mut B(i), 42, 7, "");
+        A(i) = b;
+    }
+
+    C(0)
+}
