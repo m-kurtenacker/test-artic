@@ -37,12 +37,16 @@ class TestCase:
       return  primaryName.split("-")[0] + ".csv"
     elif filetype == 'scalarLL':
       return "build/" + primaryName + ".ll"
+    elif filetype == 'scalarO':
+      return "build/" + primaryName + ".o"
     elif filetype == 'wfvLL':
       return "build/" + primaryName + ".wfv.ll"
     elif filetype == 'wfvLogPrefix':
       return "logs/" + primaryName + ".wfv"
     elif filetype == 'loopLL':
       return "build/" + primaryName + ".loopvec.ll"
+    elif filetype == 'loopO':
+      return "build/" + primaryName + ".loopvec.o"
     elif filetype == 'loopLogPrefix':
       return "logs/" + primaryName + ".loopvec"
 
@@ -249,7 +253,7 @@ class HostArticClangToolchain(Toolchain):
             runtime_dir + "/platforms/artic/intrinsics_thorin.impala"]
 
     def __init__(self):
-      self.clang = LLVMTools("-mavx -march=native -Iinclude -Wno-unused-command-line-argument")
+      self.clang = LLVMTools("-mavx -march=native -Iinclude -Wno-unused-command-line-argument", "-mavx -march=native -Iinclude -Wl,-rpath," + HostArticClangToolchain.runtime_dir + "/build/lib " + HostArticClangToolchain.runtime_dir + "/build/lib/libruntime.so -w")
 
 
     def buildOuterLoopTester(self, testCase, profileMode):
@@ -257,14 +261,10 @@ class HostArticClangToolchain(Toolchain):
 
       scalarLL = testCase.getFilename('scalarLL')
       vectorizedLL =  testCase.getFilename('loopLL')
+      scalarO = testCase.getFilename('scalarO')
+      vectorizedO =  testCase.getFilename('loopO')
       logPrefix = testCase.getFilename('loopLogPrefix') + ".rvTool"
       scalarName = "foo"
-      #ret = rvToolOuterLoop(scalarLL, vectorizedLL, scalarName, testCase.options, logPrefix)
-      #if 0 != ret: raise TestFailure(rvToolReason, logPrefix)
-
-      #optScalarLL = scalarLL[:-2] + "opt.ll"
-      #ret = self.clang.optimizeIR(optScalarLL, scalarLL, "")
-      #if 0 != ret: raise TestFailure("optimizeIR failed", None)
 
       launcherCpp, launcherCXXFlags = testCase.requestLauncher(prefix, profileMode)
 
@@ -272,12 +272,18 @@ class HostArticClangToolchain(Toolchain):
 
       # build launcher binaries
       vecLauncherBin = "./build/" + prefix + "_" + caseName + ".rv.bin"
-      ok = self.clang.compileCPP(vecLauncherBin, [vectorizedLL, launcherCpp], launcherCXXFlags) # clangLine + " " + testBC + " " + launcherLL + " -o " + launcherBin)
+      ok = self.clang.compileCPP(vectorizedO, [vectorizedLL], launcherCXXFlags + " -c ") # clangLine + " " + testBC + " " + launcherLL + " -o " + launcherBin)
+      if not ok:
+          raise TestFailure("compileCPP for vectorizedLL+launcher", None)
+      ok = self.clang.linkCPP(vecLauncherBin, [vectorizedO, launcherCpp])
       if not ok:
           raise TestFailure("compileCPP for vectorizedLL+launcher", None)
 
       scaLauncherBin = "./build/" + prefix + "_" + caseName + ".scalar.bin"
-      ok = self.clang.compileCPP(scaLauncherBin, [scalarLL, launcherCpp], launcherCXXFlags) # clangLine + " " + testBC + " " + launcherLL + " -o " + launcherBin)
+      ok = self.clang.compileCPP(scalarO, [scalarLL], launcherCXXFlags + " -c ") # clangLine + " " + testBC + " " + launcherLL + " -o " + launcherBin)
+      if not ok:
+          raise TestFailure("compileCPP for scalarLL+launcher", None)
+      ok = self.clang.linkCPP(scaLauncherBin, [scalarO, launcherCpp])
       if not ok:
           raise TestFailure("compileCPP for scalarLL+launcher", None)
 

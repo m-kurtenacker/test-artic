@@ -105,11 +105,13 @@ def rvToolWFV(scalarLL, destFile, scalarName = "foo", options = {}, logPrefix=No
 
 ############ Clang / LLVM tooling ############
 class LLVMTools(object):
-  def __init__(self, commonFlags=""):
+  def __init__(self, commonFlags="", cFlags=""):
     self.optcClangLine="clang -O3 -c -emit-llvm -S " + commonFlags
     self.optClangLine="clang++ -std=c++14 -O3 -c -emit-llvm -S "  + commonFlags
     self.clangLine="clang++ -std=c++14 -m64 -O2 -fno-vectorize -fno-slp-vectorize " + commonFlags
     self.cClangLine="clang -m64 -O2 -fno-vectorize -fno-slp-vectorize " + commonFlags
+    self.CLine="c++ -std=c++14 -m64 -O2 " + cFlags
+    self.cCLine="c -std=c++14 -m64 -O2 " + cFlags
 
 
   def compileC(self, destFile, srcFiles, extraFlags=""):
@@ -132,18 +134,6 @@ class LLVMTools(object):
       retCode = shellCmd(self.optClangLine + " " + srcFile + " " + extraFlags + " -o " + destFile)
     return retCode == 0
 
-  def compileOptimized(self, srcFile, destFile, extraFlags=""):
-    if not path.exists(srcFile):
-      return False
-  
-    if srcFile[-2:] == ".c":
-      retCode = shellCmd(self.optcClangLine + " " + srcFile + " " + extraFlags + " -o " + destFile)
-    else:
-      retCode = shellCmd(self.optClangLine + " " + srcFile + " " + extraFlags + " -o " + destFile)
-    return retCode == 0
-  
-  
-  
   def compileToIR(self, srcFile, destFile, extraFlags=""):
     if not path.exists(srcFile):
       return False
@@ -160,5 +150,5 @@ class LLVMTools(object):
   def build_launcher(self, launcherBin, launcherLL, fooFile, suffix):
       return shellCmd(self.clangLine + " -fno-slp-vectorize -o " + launcherBin + " " + launcherLL + " " + fooFile, "logs/clang-launcher_" + suffix) == 0
   
-  def assemble(self, fooFile, destAsm, suffix):
-      return shellCmd(self.clangLine + " -fno-slp-vectorize -c -S -o " + destAsm + " " + fooFile, "logs/clang-asm_" + suffix) == 0
+  def linkCPP(self, destFile, srcFiles, extraFlags=""):
+      return shellCmd(self.CLine + " " + (" ".join(srcFiles)) + " " + extraFlags + " -o " + destFile) == 0
