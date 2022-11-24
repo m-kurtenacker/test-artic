@@ -253,7 +253,7 @@ class HostArticClangToolchain(Toolchain):
             runtime_dir + "/platforms/artic/intrinsics_thorin.impala"]
 
     def __init__(self):
-      self.clang = LLVMTools("-mavx -march=native -Iinclude -Wno-unused-command-line-argument", "-mavx -march=native -Iinclude -Wl,-rpath," + HostArticClangToolchain.runtime_dir + "/build/lib " + HostArticClangToolchain.runtime_dir + "/build/lib/libruntime.so -w")
+      self.clang = LLVMTools("-mavx -march=native -Iinclude -Wno-unused-command-line-argument", "-mavx -march=native -Iinclude -Wl,-rpath," + HostArticClangToolchain.runtime_dir + "/build/lib -w ", HostArticClangToolchain.runtime_dir + "/build/lib/libruntime.so")
 
 
     def buildOuterLoopTester(self, testCase, profileMode):

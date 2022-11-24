@@ -105,13 +105,14 @@ def rvToolWFV(scalarLL, destFile, scalarName = "foo", options = {}, logPrefix=No
 
 ############ Clang / LLVM tooling ############
 class LLVMTools(object):
-  def __init__(self, commonFlags="", cFlags=""):
+  def __init__(self, commonFlags="", cFlags="", libs=""):
     self.optcClangLine="clang -O3 -c -emit-llvm -S " + commonFlags
     self.optClangLine="clang++ -std=c++14 -O3 -c -emit-llvm -S "  + commonFlags
     self.clangLine="clang++ -std=c++14 -m64 -O2 -fno-vectorize -fno-slp-vectorize " + commonFlags
     self.cClangLine="clang -m64 -O2 -fno-vectorize -fno-slp-vectorize " + commonFlags
     self.CLine="c++ -std=c++14 -m64 -O2 " + cFlags
     self.cCLine="c -std=c++14 -m64 -O2 " + cFlags
+    self.libs = libs
 
 
   def compileC(self, destFile, srcFiles, extraFlags=""):
@@ -151,4 +152,4 @@ class LLVMTools(object):
       return shellCmd(self.clangLine + " -fno-slp-vectorize -o " + launcherBin + " " + launcherLL + " " + fooFile, "logs/clang-launcher_" + suffix) == 0
   
   def linkCPP(self, destFile, srcFiles, extraFlags=""):
-      return shellCmd(self.CLine + " " + (" ".join(srcFiles)) + " " + extraFlags + " -o " + destFile) == 0
+      return shellCmd(self.CLine + " " + (" ".join(srcFiles)) + " " + extraFlags + " -o " + destFile + " " + self.libs) == 0
