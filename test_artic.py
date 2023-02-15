@@ -244,16 +244,16 @@ class HostClangToolchain(Toolchain):
 
 # clang + artic toolchain for the host target
 class HostArticClangToolchain(Toolchain):
-    runtime_dir = os.getenv("ANYDSL_RUNTIME", "../runtime")
+    runtime_dir = os.getenv("THORIN_RUNTIME_PATH", "../runtime")
 
-    artic_includes = [runtime_dir + "/platforms/artic/runtime.impala",
-            runtime_dir + "/platforms/artic/intrinsics.impala",
-            runtime_dir + "/platforms/artic/intrinsics_rv.impala",
-            runtime_dir + "/platforms/artic/intrinsics_cpu.impala",
-            runtime_dir + "/platforms/artic/intrinsics_thorin.impala"]
+    artic_includes = [runtime_dir + "/artic/runtime.impala",
+            runtime_dir + "/artic/intrinsics.impala",
+            runtime_dir + "/artic/intrinsics_rv.impala",
+            runtime_dir + "/artic/intrinsics_cpu.impala",
+            runtime_dir + "/artic/intrinsics_thorin.impala"]
 
     def __init__(self):
-      self.clang = LLVMTools("-mavx -march=native -Iinclude -Wno-unused-command-line-argument", "-mavx -march=native -Iinclude -Wl,-rpath," + HostArticClangToolchain.runtime_dir + "/build/lib -w ", HostArticClangToolchain.runtime_dir + "/build/lib/libruntime.so")
+      self.clang = LLVMTools("-mavx -march=native -Iinclude -Wno-unused-command-line-argument", "-mavx -march=native -Iinclude -L" + HostArticClangToolchain.runtime_dir + "/../../build/lib -lruntime -w ")
 
 
     def buildOuterLoopTester(self, testCase, profileMode):
